@@ -1,0 +1,20 @@
+# build output and release staging
+build/
+dist/*
+!dist/RELEASE_NOTES_*.md
+
+# local-only: retail game data / reverse-engineering workspace, backups of the user's files, tools
+re/
+backup/
+tools/dl/
+tools/ghidra_12.2_PUBLIC/
+
+# third-party SDKs (download them, see README "Building from source")
+third_party/
+
+# session handoff notes (local paths)
+NOTES.md
+
+# diagnostics
+*.raw
+*.log

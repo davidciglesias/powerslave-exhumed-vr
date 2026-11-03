@@ -1,0 +1,36 @@
+# FakeXR smoke test. Launch with: -skipmovies
+# menus: title -> main menu -> new game -> difficulty -> level map -> level (extra A = jump in game)
+# "<t> <command> [args]"; t = seconds since the last `world` (see src/xr/fake_xr.cpp)
+0    log smoke test start
+3    press A
+5    press A
+7    press A
+9    press A
+11   press A
+13   press A
+15   press A
+0    world
+3    check neutral
+3.5  head 40 0
+4.5  check head-left-40
+5    head -60 20
+6    check head-right-60-up-20
+6.5  head 0 -30
+7.5  check head-down-30
+8    head 0 0
+8    hand 25 -10
+9    check hand-left-25-down-10
+9.5  headpos 0.1 0.05 -0.2
+10.5 check head-moved
+11   headpos 0 0 0
+11   hand 0 0
+11.5 axis RT 1 0.3
+12.5 check after-fire
+13   axis LY -1 1.0
+14.5 check after-walk
+15   axis RX 0.6 0.8
+16.5 check after-stick-turn
+17   head 50 0 3
+18   check during-sweep
+21   check end
+21.5 quit

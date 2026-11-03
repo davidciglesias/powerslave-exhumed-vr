@@ -1,0 +1,15 @@
+# HUD capture: load save slot 1 (harness slot) via keys, then sit in the level for the overlay dumps
+# (overlay.cpp dumps pvr_overlay_N.raw ~30 s after the first overlay frame, then every 20 s).
+0    log hud test start
+12   key ENTER
+14   key DOWN
+15   key ENTER
+17   key ENTER
+19   key LEFT
+20   key ENTER
+25   key ENTER
+0    world
+3    check in-level
+3    key F11
+50   check end
+51   quit
