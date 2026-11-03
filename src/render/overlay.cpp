@@ -67,6 +67,13 @@ ID3D11RenderTargetView *Prepare(ID3D11DeviceContext *ctx, ID3D11Texture2D *like)
     return g_hud.rtv;
 }
 
+ID3D11RenderTargetView *PrepareMenu(ID3D11DeviceContext *ctx, ID3D11Texture2D *like) {
+    if (!like || !Ensure(g_menu, like)) return nullptr;
+    ClearOnce(ctx, g_menu);
+    g_menu.active = true;
+    return g_menu.rtv;
+}
+
 void Begin(ID3D11DeviceContext *ctx, ID3D11Texture2D *sceneRT) {
     if (!sceneRT || !Ensure(g_menu, sceneRT)) return;
     ClearOnce(ctx, g_menu);

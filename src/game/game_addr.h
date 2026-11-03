@@ -16,6 +16,7 @@ constexpr uintptr_t FN_WeaponDraw = 0x14020fc20;          // void(weapon*): 2D f
 constexpr uintptr_t FN_WeaponTick = 0x14020fb10;          // void(weapon*): weapon[0] = player; runs fire actions
 constexpr uintptr_t FN_SkyPass = 0x1401eb240;            // void(view*): PS1-style 2D sky (actor yaw/pitch + fov)
 constexpr uintptr_t FN_Ortho = 0x1400d07f0;                // void(float m[16], l, r, b, t, n, f): 2D ortho (HUD canvas)
+constexpr uintptr_t FN_AutomapDraw = 0x1401a2580;          // kexSlaveAutomapLocal draw(this, char), inside DrawWorld after post-process
 constexpr uintptr_t FN_HudDraw = 0x1401c08b0;              // kexSlaveHudLocal vtbl[0](this): status bar etc., called inside DrawWorld after post-process
 constexpr uintptr_t FN_DrawWorld = 0x1401eff40;            // void(view*, sector*): world draw (gameplay, from 0x1401b7700)
 

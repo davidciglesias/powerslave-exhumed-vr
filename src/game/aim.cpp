@@ -47,7 +47,10 @@ static bool AimAngles(float &yaw, float &pitch) {
     return true;
 }
 
+static volatile unsigned long long g_lastTick = 0;
+unsigned long long LastTickMs() { return g_lastTick; }
 static void __fastcall hk_WeaponTick(void **weapon) {
+    g_lastTick = GetTickCount64();  // the game ticks only while gameplay runs (not in menus or paused)
     uint8_t *actor = nullptr;
     float yaw, pitch;
     if (Cfg().controllerAim && weapon && weapon[0]) actor = reinterpret_cast<PFN_GetActor>(FN_PlayerGetActor)(weapon[0]);

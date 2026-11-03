@@ -292,6 +292,34 @@ static void __fastcall hk_HudDraw(void *a, void *b, void *c, void *d) {
     ctx->Release();
 }
 
+// Automap: drawn per eye in screen space inside DrawWorld. Eye 0 draws it once into the menu layer (the square,
+// head-locked menu panel); eye 1 skips it.
+static PFN_HudDraw o_AutomapDraw = nullptr;
+static void __fastcall hk_AutomapDraw(void *a, void *b, void *c, void *d) {
+    if (g_hudEye < 0 || !Cfg().hudOverlay) return o_AutomapDraw(a, b, c, d);
+    if (g_hudEye == 1) return;
+    ID3D11DeviceContext *ctx = nullptr;
+    GameDevice()->GetImmediateContext(&ctx);
+    ID3D11RenderTargetView *prevRtv = nullptr;
+    ID3D11DepthStencilView *prevDsv = nullptr;
+    ctx->OMGetRenderTargets(1, &prevRtv, &prevDsv);
+    ID3D11Texture2D *t = TexOf(prevRtv);
+    ID3D11RenderTargetView *ov = t ? overlay::PrepareMenu(ctx, t) : nullptr;
+    if (ov) {
+        SetRenderTargetRedirect(ov);
+        ctx->OMSetRenderTargets(1, &ov, nullptr);
+        o_AutomapDraw(a, b, c, d);
+        SetRenderTargetRedirect(nullptr);
+        ctx->OMSetRenderTargets(1, &prevRtv, prevDsv);
+    } else {
+        o_AutomapDraw(a, b, c, d);
+    }
+    if (t) t->Release();
+    if (prevRtv) prevRtv->Release();
+    if (prevDsv) prevDsv->Release();
+    ctx->Release();
+}
+
 using PFN_SkyPass = void(__fastcall *)(uint8_t *view);
 using PFN_Player = void *(__fastcall *)();
 using PFN_GetActor = uint8_t *(__fastcall *)(void *player);
@@ -663,6 +691,9 @@ void Install() {
     s = MH_CreateHook(reinterpret_cast<void *>(FN_HudDraw), (void *)hk_HudDraw, (void **)&o_HudDraw);
     MH_EnableHook(reinterpret_cast<void *>(FN_HudDraw));
     PVR_LOG("stereo: HudDraw hook %d", (int)s);
+    s = MH_CreateHook(reinterpret_cast<void *>(FN_AutomapDraw), (void *)hk_AutomapDraw, (void **)&o_AutomapDraw);
+    MH_EnableHook(reinterpret_cast<void *>(FN_AutomapDraw));
+    PVR_LOG("stereo: AutomapDraw hook %d", (int)s);
     s = MH_CreateHook(reinterpret_cast<void *>(FN_Ortho), (void *)hk_Ortho, (void **)&o_Ortho);
     MH_EnableHook(reinterpret_cast<void *>(FN_Ortho));
     PVR_LOG("stereo: Ortho hook %d", (int)s);

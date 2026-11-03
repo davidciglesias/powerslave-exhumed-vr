@@ -9,4 +9,6 @@ struct AimStats {
     float actorYaw = 0, actorPitch = 0;  // the actor's own rotation (restored afterwards)
 };
 AimStats LastAim();
+// GetTickCount64() of the last weapon tick (0 = never): gameplay is running while this stays recent
+unsigned long long LastTickMs();
 }  // namespace pvr::aim

@@ -8,6 +8,9 @@
     starts navigating, so a held stick doesn't jump the selection.
   - The real D-pad keeps working as before.
 
+## Fixed
+- **The automap (View) is visible and usable.** It shows on the menu panel in front of you.
+
 ## Install
 - **PC (streamed)**: follow https://github.com/davidciglesias/powerslave-exhumed-vr#install-on-a-pc-streamed
 - **Steam Frame (standalone)**: follow https://github.com/davidciglesias/powerslave-exhumed-vr#install-on-the-steam-frame-standalone
@@ -30,4 +33,4 @@ Same as 0.1.0:
 - No snap turn, recenter or seated-height option yet.
 - Only works with Steam build 19569414 of the game.
 
-SHA-256 (`PowerslaveExhumedVR.zip`): `f1a8b979b3de8343029f287bb5f4a9f5df664b68911fccd370b468746bd2f793`
+SHA-256 (`PowerslaveExhumedVR.zip`): `0602a208e4381ccbe87f17acb5ddb56b693998bd45efd0a9a36d6d945e94534e`
