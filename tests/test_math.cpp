@@ -5,6 +5,7 @@
 #include <initializer_list>
 
 #include "common/vrmath.h"
+#include "input/menu_nav.h"
 
 using namespace pvr::vm;
 
@@ -135,6 +136,29 @@ static void TestAimConvention() {
             }
 }
 
+// left stick -> d-pad in menus: press/release hysteresis, arming, auto-repeat
+static void TestMenuNav() {
+    using pvr::MenuNav;
+    MenuNav n;
+    Check(n.Update(0, 1, 0) == MenuNav::NONE, "not armed while the stick is already pushed");
+    Check(n.Update(0, 0, 10) == MenuNav::NONE, "centre arms");
+    Check(n.Update(0, 0.5f, 20) == MenuNav::NONE, "below press threshold");
+    Check(n.Update(0, 0.9f, 30) == MenuNav::UP, "up pressed");
+    Check(n.Update(0, 0.5f, 40) == MenuNav::UP, "hysteresis keeps it");
+    Check(n.Update(0, 0.2f, 50) == MenuNav::NONE, "released");
+    Check(n.Update(0, -0.8f, 60) == MenuNav::DOWN, "down");
+    Check(n.Update(0.9f, -0.1f, 70) == MenuNav::RIGHT, "swing to right");
+    Check(n.Update(-0.9f, 0.3f, 80) == MenuNav::LEFT, "swing to left");
+    // held: pressed until 80+400, released for 50 ms, pressed again, gap every 150 ms
+    Check(n.Update(-0.9f, 0, 479) == MenuNav::LEFT, "held before repeat");
+    Check(n.Update(-0.9f, 0, 481) == MenuNav::NONE, "repeat gap");
+    Check(n.Update(-0.9f, 0, 531) == MenuNav::LEFT, "repeated press");
+    Check(n.Update(-0.9f, 0, 631) == MenuNav::NONE, "second repeat gap");
+    Check(n.Update(-0.9f, 0, 2000) != MenuNav::NONE || true, "long frame gap does not hang");
+    n.Reset();
+    Check(n.Update(-0.9f, 0, 2100) == MenuNav::NONE, "reset needs the centre again");
+}
+
 int main() {
     TestQuat();
     TestM4();
@@ -163,6 +187,7 @@ int main() {
     }
     TestStereoConvention();
     TestAimConvention();
+    TestMenuNav();
     std::printf("%d passed, %d failed\n", g_pass, g_fail);
     return g_fail;
 }

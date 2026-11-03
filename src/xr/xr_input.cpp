@@ -244,6 +244,7 @@ void InputSync(XrSession sess, bool focused, float headYaw) {
             ps.buttons[PB_PADDLE1] = GetF(sess, A_RGRIP) > 0.6f;
             ps.buttons[PB_PADDLE2] = GetF(sess, A_LGRIP) > 0.6f;
             XrVector2f l = GetV(sess, A_LSTICK), r = GetV(sess, A_RSTICK);
+            ps.navX = l.x, ps.navY = l.y;
             // head-relative locomotion: the game moves relative to body yaw; rotate the stick
             // (x right, y forward) by the head's yaw relative to the body (positive = left)
             float c = std::cos(headYaw), s = std::sin(headYaw);

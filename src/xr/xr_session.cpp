@@ -504,6 +504,7 @@ static int SubmitHud(ID3D11DeviceContext *ctx, const overlay::Out &hud, const ov
 }
 
 // FakeXR harness: no OpenXR; the script provides the views for the next frame.
+static bool g_menuUp = false;  // menu layer drawn this frame
 static void FakePresent(ID3D11ShaderResourceView *hud) {
     {  // whole-frame render-target trace, as in the real path
         static uint64_t s_n = 0;
@@ -528,6 +529,7 @@ static void FakePresent(ID3D11ShaderResourceView *hud) {
     }
     XrView v[2];
     bool have = g_eyeImg[0].frame == g_frameIndex && g_eyeImg[1].frame == g_frameIndex;
+    PadSetMenuMode(!have || g_menuUp);
     fake::Frame(hud, have ? g_eyeImg[0].tex : nullptr, have ? g_eyeImg[1].tex : nullptr, v);
     std::lock_guard<std::mutex> lk(g_frameMtx);
     g_running = true;
@@ -542,6 +544,7 @@ void OnPresent(IDXGISwapChain *sc) {
     overlay::End(hudOut, menuOut);
     ID3D11ShaderResourceView *hudSrv = hudOut.srv ? hudOut.srv : menuOut.srv;
     if (Cfg().fakeXR) {
+        g_menuUp = menuOut.srv != nullptr;
         if (GameDevice()) FakePresent(hudSrv);
         return;
     }
@@ -587,7 +590,10 @@ void OnPresent(IDXGISwapChain *sc) {
         s_prev = combo;
         g_forceFlat = s_flat;
     }
-    bool stereo = !g_forceFlat && viewsValid && g_eyeImg[0].frame == frame && g_eyeImg[1].frame == frame;
+    bool worldDrawn = viewsValid && g_eyeImg[0].frame == frame && g_eyeImg[1].frame == frame;
+    bool stereo = !g_forceFlat && worldDrawn;
+    // a menu is up when no 3D world was drawn (title, loading, level map) or the menu layer was (pause menu)
+    PadSetMenuMode(!worldDrawn || menuOut.srv != nullptr);
     // whole-frame render-target trace (diagnostics for HUD/menu compositing)
     {
         static uint64_t s_n = 0;

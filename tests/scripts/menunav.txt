@@ -1,0 +1,22 @@
+# Menu navigation with the left stick (no d-pad, as on Quest controllers): load save slot 1 (harness slot) moving through
+# the menus with the stick instead of arrow keys, then open/close the pause menu in the level.
+# Expect: "menu nav on" in menus, "virtual button 12 down" (d-pad down) / "13" (left), the level loads
+# ("fake: world running"), "menu nav off" in the level, on again while paused, off after unpausing.
+0    log menunav test start
+12   key ENTER
+14   axis LY 0.9 0.3
+15   key ENTER
+17   key ENTER
+19   axis LX -0.9 0.3
+20   key ENTER
+25   key ENTER
+0    world
+3    log in level
+5    press START 0.2
+8    log paused
+8    axis LY 0.9 0.3
+10   press START 0.2
+13   log unpaused
+14   axis LY -0.9 1.0
+16   check end
+17   quit

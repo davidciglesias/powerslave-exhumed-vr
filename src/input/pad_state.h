@@ -15,9 +15,12 @@ struct PadState {
     bool connected = false;
     bool buttons[PB_COUNT] = {};
     int16_t axes[PA_COUNT] = {};
+    float navX = 0, navY = 0;  // raw left stick (x right +, y up +), before head-relative rotation: menu navigation
 };
 
 // Written by the XR thread (Present hook), read by the game's SDL event pump.
 void PadPublish(const PadState &s);
 PadState PadSnapshot();
+// While on (a menu is up), the left stick drives the d-pad (and no longer moves). Set once per frame.
+void PadSetMenuMode(bool on);
 }  // namespace pvr

@@ -5,7 +5,7 @@ weapons held and aimed with the right controller, head-relative movement, and th
 (health/ammo/air on a chest panel, messages below your gaze, menus on their own panel).
 
 Made for the **Steam Frame** through SteamVR (OpenXR). Other SteamVR headsets should work too, but haven't been tested yet.
-This is a first release (0.1.0): very playable, with some rough edges listed under [Known issues](#known-issues).
+This is an early release: very playable, with some rough edges listed under [Known issues](#known-issues).
 
 ## What you need
 
@@ -72,7 +72,7 @@ sh frame_uninstall.sh
 
 | Input | Action |
 |---|---|
-| Left stick | Move, relative to where you look |
+| Left stick | Move, relative to where you look. In menus it works as the D-pad |
 | Right stick (left/right) | Turn |
 | Right trigger | Fire (aim with the right controller) |
 | Left trigger, B | Use / open |
@@ -85,7 +85,7 @@ sh frame_uninstall.sh
 | Menu (right) | Pause menu |
 | Left grip + View | Toggle a flat screen view (e.g. to fix a menu) |
 
-Other controllers: A/B on the right, X/Y on the left, Menu on the left. There's no D-pad, View or bumpers.
+Other controllers (e.g. Quest Touch): A/B on the right, X/Y on the left, Menu on the left. They have no D-pad, View or bumpers; use the left stick to move through menus.
 
 ## Game settings
 

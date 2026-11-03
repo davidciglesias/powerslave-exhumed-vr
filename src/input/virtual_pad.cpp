@@ -10,13 +10,31 @@
 
 #include "common/config.h"
 #include "common/log.h"
+#include "input/menu_nav.h"
 #include "input/pad_state.h"
 
 namespace pvr {
 static std::mutex g_padMtx;
 static PadState g_pad;
-void PadPublish(const PadState &s) {
+static bool g_menuMode = false;
+static MenuNav g_nav;
+void PadSetMenuMode(bool on) {
     std::lock_guard<std::mutex> lk(g_padMtx);
+    if (on == g_menuMode) return;
+    static int s_logs = 0;
+    if (s_logs < 60) ++s_logs, PVR_LOG("menu nav %s", on ? "on" : "off");
+    g_menuMode = on;
+    g_nav.Reset();
+}
+void PadPublish(const PadState &in) {
+    PadState s = in;
+    std::lock_guard<std::mutex> lk(g_padMtx);
+    if (g_menuMode) {
+        static const PadButton kBtn[4] = {PB_DPAD_UP, PB_DPAD_DOWN, PB_DPAD_LEFT, PB_DPAD_RIGHT};
+        int d = g_nav.Update(s.navX, s.navY, GetTickCount64());
+        if (d != MenuNav::NONE) s.buttons[kBtn[d]] = true;
+        s.axes[PA_LEFTX] = s.axes[PA_LEFTY] = 0;
+    }
     g_pad = s;
 }
 PadState PadSnapshot() {

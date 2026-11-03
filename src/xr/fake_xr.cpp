@@ -464,6 +464,7 @@ void Frame(ID3D11ShaderResourceView *hud, ID3D11Texture2D *eye0, ID3D11Texture2D
         v = std::fmax(-1.0f, std::fmin(1.0f, v));
         ps.axes[a] = (int16_t)std::lround(v * 32767.0f);
     }
+    ps.navX = ps.axes[PA_LEFTX] / 32767.0f, ps.navY = -ps.axes[PA_LEFTY] / 32767.0f;
     PadPublish(ps);
 }
 
